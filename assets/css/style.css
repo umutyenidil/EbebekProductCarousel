@@ -41,6 +41,7 @@ body {
 
 .product-group .product-group__content .product-list {
     list-style: none;
+    cursor: grab;
 
     width: 100%;
     padding: 3px;
@@ -48,23 +49,34 @@ body {
     display: flex;
     flex-wrap: nowrap;
 
-    overflow: hidden;
+    overflow-x: auto;
     scrollbar-width: none;
     -ms-overflow-style: none;
+
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
 }
 
 .product-group .product-group__content .product-list::-webkit-scrollbar {
     display: none;
 }
 
-.product-group .product-group__content .product-list .product-list__item {
-    padding-right: 24px;
+.product-group .product-group__content .product-list.dragging {
+    cursor: grabbing;
+    user-select: none;
+}
 
-    flex: 0 0 51.7%;
+.product-group .product-group__content .product-list .product-list__item {
+    margin-right: 24px;
+
+    flex: 0 0 47%;
+
+    scroll-snap-align: start;
 }
 
 .product-group .product-group__content .product-list .product-list__item:last-child {
-    /*padding-right: 0;*/
+    margin-right: 0;
 }
 
 .product-card {
@@ -72,6 +84,7 @@ body {
 
     z-index: 9;
     padding: 6px;
+    margin-left: 2px;
 
     display: flex;
     flex-direction: column;
@@ -132,12 +145,12 @@ body {
     list-style: none;
 
     display: flex;
-    column-gap: 6px;
+    column-gap: 3px;
 }
 
 .product-card .product-card__rating .rating-bar li {
     color: #d7d7d7;
-    font-size: 1.1rem;
+    font-size: 1rem;
 }
 
 .product-card .product-card__rating .rating-bar li .filled {
@@ -240,6 +253,22 @@ body {
     .container {
         max-width: 540px;
     }
+
+    .product-group .product-group__content .product-list .product-list__item {
+        flex: 0 0 48%;
+    }
+
+    .product-card .product-card__rating .rating-bar {
+        list-style: none;
+
+        display: flex;
+        column-gap: 6px;
+    }
+
+    .product-card .product-card__rating .rating-bar li {
+        color: #d7d7d7;
+        font-size: 1.1rem;
+    }
 }
 
 @media (min-width: 768px) {
@@ -254,7 +283,7 @@ body {
     }
 
     .product-group .product-group__content .product-list .product-list__item {
-        flex: 0 0 34.2%;
+        flex: 0 0 31.8%;
     }
 }
 
@@ -264,7 +293,7 @@ body {
     }
 
     .product-group .product-group__content .product-list .product-list__item {
-        flex: 0 0 25.5%;
+        flex: 0 0 23.5%;
     }
 }
 
@@ -274,6 +303,6 @@ body {
     }
 
     .product-group .product-group__content .product-list .product-list__item {
-        flex: 0 0 20.4%
+        flex: 0 0 18.56%
     }
 }

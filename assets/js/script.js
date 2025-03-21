@@ -126,4 +126,29 @@ $(function () {
             }
         },
     });
+
+    const $slider = $('.product-list');
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+
+    $slider.on('mousedown', function (e) {
+        isDown = true;
+        $slider.addClass('dragging');
+        startX = e.pageX - $slider.offset().left;
+        scrollLeft = $slider.scrollLeft();
+        e.preventDefault();
+    });
+
+    $(document).on('mouseup', function () {
+        isDown = false;
+        $slider.removeClass('dragging');
+    });
+
+    $(document).on('mousemove', function (e) {
+        if (!isDown) return;
+        const x = e.pageX - $slider.offset().left;
+        const walk = (x - startX) * 1.5; // adjust scroll speed
+        $slider.scrollLeft(scrollLeft - walk);
+    });
 });
