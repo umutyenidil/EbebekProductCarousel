@@ -105,7 +105,7 @@ const buildProductListItem = (data) => {
         const discount = original_price > price ? `
             <div class="discount">
                 <span class="price-old discounted">${formatPrice(original_price)} TL</span>
-                <span class="percentage discounted">%${discountPercentage}<i class='bx bxs-down-arrow-circle'></i></span>
+                <span class="percentage discounted">%${discountPercentage}<i class="icon icon-decrease"></i></span>
             </div>
         ` : '';
 
@@ -166,13 +166,49 @@ const buildProductListItem = (data) => {
     return buildHtml(data);
 };
 
+const buildProductListItemPlaceholder = () => {
+    const buildHtml = () => {
+        return `
+            <li class="product-list__item placeholder">
+                <div class="product-card placeholder">
+                        <div class="product-card__header placeholder">
+                        </div>
+                        <div class="product-card__title">
+                            <div class="title placeholder"></div>
+                        </div>
+                        <div class="product-card__rating">
+                            <div class="rating-bar placeholder""></div>
+                        </div>
+                        <div class="product-card__pricing">
+                            <div class="price-now placeholder"></div>
+                        </div>
+                        <div class="product-card__promotion">
+                        </div>
+                        <div class="product-card__footer">
+                            <div class="btn-cart placeholder"></div>
+                        </div>
+                    </div>
+            </li>
+        `
+    };
+
+    return buildHtml();
+};
+
 $(function () {
     fetcher({
         url: "https://gist.githubusercontent.com/sevindi/8bcbde9f02c1d4abe112809c974e1f49/raw/9bf93b58df623a9b16f1db721cd0a7a539296cf0/products.json",
         onData: (products) => {
-            for (const product of products) {
-                const productListItem = buildProductListItem(product);
-                $(this).find("ul.product-list").append(productListItem);
+            for (let i = 0; i < products.length; i++) {
+                if (i % 2 === 0) {
+                    const productListItem = buildProductListItem(products[i]);
+
+                    $(this).find("ul.product-list").append(productListItem);
+                } else {
+                    const productListItemPlaceholder = buildProductListItemPlaceholder();
+
+                    $(this).find("ul.product-list").append(productListItemPlaceholder);
+                }
             }
         },
     });
