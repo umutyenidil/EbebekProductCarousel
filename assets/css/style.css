@@ -79,6 +79,10 @@ body {
     margin-right: 0;
 }
 
+.product-group .product-group__content .product-list .product-list__item a {
+    text-decoration: none;
+}
+
 .product-card {
     font-family: 'Poppins', sans-serif;
 

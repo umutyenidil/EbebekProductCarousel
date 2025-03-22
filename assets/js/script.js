@@ -86,29 +86,31 @@ const buildProductListItem = (data) => {
         return `
             <li class="product-list__item"
                 data-id="${id}">
-                <div class="product-card">
-                    <div class="product-card__header">
-                        <img src="${img}" alt="product-image">
+                <a href="${url}">
+                    <div class="product-card">
+                        <div class="product-card__header">
+                            <img src="${img}" alt="product-image">
+                        </div>
+                        <div class="product-card__title">
+                            <h2 class="title"><b>${brand} -</b> ${name}</h2>
+                        </div>
+                        <div class="product-card__rating">
+                            <ul class="rating-bar">
+                                ${ratingItems}
+                            </ul>
+                            <span class="rating-count">(${rating_count ?? 0})</span>
+                        </div>
+                        <div class="product-card__pricing">
+                            ${discount}
+                            ${priceNow}
+                        </div>
+                        <div class="product-card__promotion">
+                        </div>
+                        <div class="product-card__footer">
+                            <button class="btn-cart">Sepete Ekle</button>
+                        </div>
                     </div>
-                    <div class="product-card__title">
-                        <h2 class="title"><b>${brand} -</b> ${name}</h2>
-                    </div>
-                    <div class="product-card__rating">
-                        <ul class="rating-bar">
-                            ${ratingItems}
-                        </ul>
-                        <span class="rating-count">(${rating_count ?? 0})</span>
-                    </div>
-                    <div class="product-card__pricing">
-                        ${discount}
-                        ${priceNow}
-                    </div>
-                    <div class="product-card__promotion">
-                    </div>
-                    <div class="product-card__footer">
-                        <button class="btn-cart">Sepete Ekle</button>
-                    </div>
-                </div>
+                </a>
             </li>
         `
     };
@@ -150,5 +152,11 @@ $(function () {
         const x = e.pageX - $slider.offset().left;
         const walk = (x - startX) * 1.5; // adjust scroll speed
         $slider.scrollLeft(scrollLeft - walk);
+    });
+
+    $(".product-list").on("click", (e) => {
+        if ($(e.target).hasClass("btn-cart")) {
+            e.preventDefault();
+        }
     });
 });
