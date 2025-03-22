@@ -86,7 +86,7 @@ const buildProductListItem = (data) => {
         return `
             <li class="product-list__item"
                 data-id="${id}">
-                <a href="${url}">
+                <a href="${url}" target="_blank">
                     <div class="product-card">
                         <div class="product-card__header">
                             <img src="${img}" alt="product-image">
