@@ -62,6 +62,38 @@ const formatPrice = (price) => {
     }).format(price);
 };
 
+const saveFavoriteProduct = (productId) => {
+    const key = location.hostname + "|" + "favoriteProductIds";
+
+    const favoriteProductIds = JSON.parse(localStorage.getItem(key)) ?? [];
+
+    if (favoriteProductIds.includes(productId)) return;
+
+    favoriteProductIds.push(productId);
+
+    localStorage.setItem(key, JSON.stringify(favoriteProductIds));
+};
+
+const isFavoriteProduct = (productId) => {
+    const key = location.hostname + "|" + "favoriteProductIds";
+
+    const favoriteProductIds = JSON.parse(localStorage.getItem(key)) ?? [];
+
+    return favoriteProductIds.includes(productId);
+};
+
+const removeFavoriteProduct = (productId) => {
+    const key = location.hostname + "|" + "favoriteProductIds";
+
+    const favoriteProductIds = JSON.parse(localStorage.getItem(key)) ?? [];
+
+    if (!favoriteProductIds.includes(productId)) return;
+
+    const newFavoriteProductIds = favoriteProductIds.filter((fpi) => fpi !== productId);
+
+    localStorage.setItem(key, JSON.stringify(newFavoriteProductIds));
+};
+
 const buildProductListItem = (data) => {
     const buildHtml = ({id, brand, name, url, img, price, original_price, rating, rating_count}) => {
 
@@ -82,6 +114,18 @@ const buildProductListItem = (data) => {
             const filled = Math.ceil(rating ?? 0) >= i + 1;
             ratingItems += `<li><i class='bx bxs-star${filled ? " filled" : ""}'></i></li>`;
         }
+
+        const buildFavoriteButton = (id) => {
+            const isFavorite = isFavoriteProduct(id);
+
+            return `
+                <button class="btn-favorite"
+                        data-favorite="${isFavorite ? "1" : "0"}">
+                    <img src="${isFavorite ? "assets/svg/added-favorite.svg" : "assets/svg/default-favorite.svg"}" alt="heart" class="heart-icon">
+                    <img src="${isFavorite ? "assets/svg/added-favorite-hover.svg" : "assets/svg/default-hover-favorite.svg"}" alt="heart" class="heart-icon hovered">
+                </button>
+            `;
+        };
 
         return `
             <li class="product-list__item"
@@ -108,6 +152,10 @@ const buildProductListItem = (data) => {
                         </div>
                         <div class="product-card__footer">
                             <button class="btn-cart">Sepete Ekle</button>
+                        </div>
+                        
+                        <div class="product-card__overlay">
+                            ${buildFavoriteButton(id)}
                         </div>
                     </div>
                 </a>
@@ -150,13 +198,33 @@ $(function () {
     $(document).on('mousemove', function (e) {
         if (!isDown) return;
         const x = e.pageX - $slider.offset().left;
-        const walk = (x - startX) * 1.5; // adjust scroll speed
+        const walk = (x - startX) * 1.5;
         $slider.scrollLeft(scrollLeft - walk);
     });
 
     $(".product-list").on("click", (e) => {
         if ($(e.target).hasClass("btn-cart")) {
             e.preventDefault();
+        }
+
+        if ($(e.target).closest("button").hasClass("btn-favorite")) {
+            e.preventDefault();
+
+            if (+$(e.target).closest("button").data("favorite")) {
+                removeFavoriteProduct($(e.target).closest(".product-list__item").data("id"));
+
+                $(e.target).closest("button").data("favorite", "0");
+
+                $(e.target).closest("button").find(".heart-icon").attr("src", "assets/svg/default-favorite.svg");
+                $(e.target).closest("button").find(".heart-icon.hovered").attr("src", "assets/svg/default-hover-favorite.svg");
+            } else {
+                saveFavoriteProduct($(e.target).closest(".product-list__item").data("id"));
+
+                $(e.target).closest("button").data("favorite", "1");
+
+                $(e.target).closest("button").find(".heart-icon").attr("src", "assets/svg/added-favorite.svg");
+                $(e.target).closest("button").find(".heart-icon.hovered").attr("src", "assets/svg/added-favorite-hover.svg");
+            }
         }
     });
 });
