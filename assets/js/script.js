@@ -32,13 +32,15 @@ const cachedData = (url) => {
             return null;
         }
 
-        return {data, expiry};
+        return data;
     } catch (e) {
         return null;
     }
 };
 
-const fetcher = ({url, onData}) => {
+const fetcher = ({url, onData, onPending = null}) => {
+    onPending?.(true);
+
     const data = cachedData(url);
     if (!data) {
         $.ajax({
@@ -46,11 +48,21 @@ const fetcher = ({url, onData}) => {
             type: "GET",
             dataType: 'json',
             success: function (data) {
-                cacheData(url, data, 100);
-                onData(data);
+                cacheData(url, data, 10_000);
+
+                // add some timeout to see placeholders explicitly
+                setTimeout(() => {
+                    onPending?.(false);
+
+                    onData(data);
+                }, 500);
+            },
+            error: function () {
+                onPending?.(false);
             }
         });
     } else {
+        onPending?.(false);
         onData(data);
     }
 };
@@ -199,16 +211,23 @@ $(function () {
     fetcher({
         url: "https://gist.githubusercontent.com/sevindi/8bcbde9f02c1d4abe112809c974e1f49/raw/9bf93b58df623a9b16f1db721cd0a7a539296cf0/products.json",
         onData: (products) => {
+            console.log(products);
             for (let i = 0; i < products.length; i++) {
-                if (i % 2 === 0) {
-                    const productListItem = buildProductListItem(products[i]);
-
-                    $(this).find("ul.product-list").append(productListItem);
-                } else {
+                const productListItem = buildProductListItem(products[i]);
+                $(this).find("ul.product-list").append(productListItem);
+            }
+        },
+        onPending: (pending) => {
+            console.log(pending ? "bekleniyor" : "geldi");
+            if (pending) {
+                $(this).find("ul.product-list").css("pointer-events", "none");
+                for (let i = 0; i < 8; i++) {
                     const productListItemPlaceholder = buildProductListItemPlaceholder();
-
                     $(this).find("ul.product-list").append(productListItemPlaceholder);
                 }
+            } else {
+                $(this).find("ul.product-list").removeAttr("style");
+                $(this).find("ul.product-list").empty();
             }
         },
     });
