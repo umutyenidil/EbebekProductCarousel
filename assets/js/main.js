@@ -154,7 +154,7 @@ body {
 }
 
 .uYcontainer {
-    margin: 0 auto
+    margin: 50px auto;
 }
 
 .uYproduct-group {
