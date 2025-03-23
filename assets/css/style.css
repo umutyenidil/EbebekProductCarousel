@@ -51,6 +51,7 @@ body {
     flex-wrap: nowrap;
 
     overflow-x: auto;
+    overflow-y: hidden;
     scrollbar-width: none;
     -ms-overflow-style: none;
 
@@ -112,6 +113,7 @@ body {
     background-position: 18px;
     left: -65px;
 }
+
 .uYproduct-group .uYproduct-group__content .uYswiper-next {
     background: url(/assets/svg/next.svg) no-repeat;
     background-color: #fef6eb;

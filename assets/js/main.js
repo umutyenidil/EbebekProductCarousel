@@ -196,6 +196,7 @@ body {
     flex-wrap: nowrap;
 
     overflow-x: auto;
+    overflow-y: hidden;
     scrollbar-width: none;
     -ms-overflow-style: none;
 
