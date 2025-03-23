@@ -154,27 +154,25 @@ body {
 }
 
 .uYcontainer {
-    margin: 50px auto;
+    margin: 24px auto 0 24px;
+    width: 100%;
 }
 
 .uYproduct-group {
     display: flex;
     flex-direction: column;
-    box-shadow: 15px 15px 30px 0 #ebebeb80;
     border-radius: 0 0 36px 36px;
 }
 
 .uYproduct-group .uYproduct-group__header {
-    background-color: #fef6eb;
-    padding: 24px 54px;
-    border-radius: 36px 36px 0 0;
+    padding: 0 24px;
 }
 
 .uYproduct-group .uYproduct-group__header .uYtitle {
     font-family: Quicksand-Bold;
-    font-size: 3rem;
+    font-size: 2.2rem;
     font-weight: 700;
-    line-height: 1.11;
+    line-height: 1.15;
     color: #f28e00;
     margin: 0;
 }
@@ -214,7 +212,7 @@ body {
 }
 
 .uYproduct-group .uYproduct-group__content .uYproduct-list .uYproduct-list__item {
-    margin-right: 24px;
+    margin-right: 12px;
 
     flex: 0 0 47%;
 
@@ -235,6 +233,7 @@ body {
 
 .uYproduct-group .uYproduct-group__content .uYswiper-next,
 .uYproduct-group .uYproduct-group__content .uYswiper-prev {
+    display: none;
     cursor: pointer;
     width: 50px;
     height: 50px;
@@ -359,7 +358,7 @@ body {
 
 .uYproduct-card .uYproduct-card__rating .uYrating-bar li i{
     color: #d7d7d7;
-    font-size: 14px;
+    font-size: 11px;
 }
 
 .uYproduct-card .uYproduct-card__rating .uYrating-bar li i .uYfilled {
@@ -423,7 +422,7 @@ body {
 .uYproduct-card .uYproduct-card__pricing .uYprice-now {
     margin-top: 28px;
 
-    font-size: 24px;
+    font-size: 18px;
     font-weight: 600;
 }
 
@@ -516,13 +515,34 @@ body {
     display: none;
 }
 
-@media (min-width: 576px) {
+@media (min-width: 480px) {
     .uYcontainer {
-        max-width: 540px;
+        margin: 50px auto;
+    }
+    
+    .uYproduct-group {
+        box-shadow: 15px 15px 30px 0 #ebebeb80;
+    }
+    
+    .uYproduct-group .uYproduct-group__header {
+        background-color: #fef6eb;
+        padding: 24px 54px;
+        border-radius: 36px 36px 0 0;
+    }
+    
+    .uYproduct-group .uYproduct-group__header .uYtitle {
+        font-family: Quicksand-Bold;
+        font-size: 3rem;
+        line-height: 1.11;
     }
 
     .uYproduct-group .uYproduct-group__content .uYproduct-list .uYproduct-list__item {
+        margin-right: 24px;
         flex: 0 0 48%;
+    }
+    
+    .uYproduct-card .uYproduct-card__pricing .uYprice-now {
+        font-size: 24px;
     }
 
     .uYproduct-card .uYproduct-card__rating .uYrating-bar {
@@ -531,10 +551,20 @@ body {
         display: flex;
         column-gap: 6px;
     }
+    
+    .uYproduct-card .uYproduct-card__rating .uYrating-bar li i{
+        font-size: 14px;
+    }
+    
+    .uYproduct-group .uYproduct-group__content .uYswiper-next,
+    .uYproduct-group .uYproduct-group__content .uYswiper-prev {
+        display: block;
+    }
+}
 
-    .uYproduct-card .uYproduct-card__rating .uYrating-bar li {
-        color: #d7d7d7;
-        font-size: 1.1rem;
+@media (min-width: 540px) {
+    .uYcontainer {
+        max-width: 540px;
     }
 }
 
