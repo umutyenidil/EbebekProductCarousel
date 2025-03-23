@@ -889,7 +889,11 @@ body {
 }
 
 class App {
-    constructor() {
+    init() {
+        const validPage = this.checkPage();
+
+        if (!validPage) return;
+
         this.buildDependencies(() => {
             new ProductCarousel({
                 prevBlockSelector: ".Section1",
@@ -897,6 +901,14 @@ class App {
                 productsUrl: "https://gist.githubusercontent.com/sevindi/8bcbde9f02c1d4abe112809c974e1f49/raw/9bf93b58df623a9b16f1db721cd0a7a539296cf0/products.json"
             });
         });
+    }
+
+    checkPage() {
+        const isCorrectLocation = window.location.pathname === '/' || window.location.pathname === '';
+
+        if (!isCorrectLocation) console.log("wrong page");
+
+        return isCorrectLocation;
     }
 
     // product carousel icin kullanilacak jquery surumunu dom'a ekle ve min.js loaded olduysa callback function'i cagir
@@ -909,4 +921,4 @@ class App {
 }
 
 const app = new App();
-window.app = app;
+app.init();
