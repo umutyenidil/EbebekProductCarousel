@@ -1,0 +1,1 @@
+# copy the main.js file content
