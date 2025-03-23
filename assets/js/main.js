@@ -1,5 +1,5 @@
 class StorageManager {
-    constructor(defaultCachingDuration = 0) {
+    constructor({defaultCachingDuration = 0}) {
         this._storageKeyPrefix = location.hostname;
 
         this._expiryInMillis = defaultCachingDuration;
@@ -49,63 +49,21 @@ class StorageManager {
 }
 
 class RequestManager {
-    constructor(cachingDuration = 1000) {
-        this.storageKeyPrefix = location.hostname;
-
-        this.expiryInMillis = cachingDuration;
+    constructor(storageManager) {
+        this.storage = storageManager;
     }
 
-    getStorageKey(url) {
-        return this.storageKeyPrefix + "|" + url;
-    }
-
-    cacheRequestData(url, data, expiryInMillis = this.expiryInMillis) {
-        try {
-            const expiryTimestamp = Date.now() + expiryInMillis;
-
-            const cacheObject = {
-                data,
-                expiry: expiryTimestamp
-            };
-
-            localStorage.setItem(this.getStorageKey(url), JSON.stringify(cacheObject));
-
-            return data;
-        } catch (e) {
-            return data;
-        }
-    }
-
-    cachedRequestData(url) {
-        try {
-            const cacheString = localStorage.getItem(this.getStorageKey(url));
-
-            if (!cacheString) return null;
-
-            const {data, expiry} = JSON.parse(cacheString);
-
-            if (Date.now() > expiry) {
-                localStorage.removeItem(url);
-                return null;
-            }
-
-            return data;
-        } catch (e) {
-            return null;
-        }
-    }
-
-    fetcher({url, onData, onPending = null}) {
+    get({url, onData, onPending = null}) {
         onPending?.(true);
 
-        const data = this.cachedRequestData(url);
+        const data = this.storage.getSavedData(url);
         if (!data) {
             $.ajax({
                 url,
                 type: "GET",
                 dataType: 'json',
                 success: (data) => {
-                    this.cacheRequestData(url, data);
+                    this.storage.saveData(url, data);
 
                     // add some timeout to see placeholders explicitly
                     setTimeout(() => {
