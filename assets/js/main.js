@@ -1,16 +1,21 @@
 class StorageManager {
+    // storage config al
     constructor(config = {defaultCachingDuration: 0}) {
+        // varolan local storage verileri ile cakismalari onlemek icin bir prefix olustur
         this._storageKeyPrefix = location.hostname;
 
         this._expiryInMillis = config.defaultCachingDuration;
     }
 
+    // verilen key ile prefixi birlestirip storage key elde et
     _getStorageKey(key) {
         return this._storageKeyPrefix + "|" + key;
     }
 
+    // veriyi local storage'a kaydet
     saveData(key, data, expiryInMillis = this._expiryInMillis) {
         try {
+            // verilen caching suresi 0'dan buyukse olustur.
             const expiryTimestamp = expiryInMillis > 0 ? Date.now() + expiryInMillis : undefined;
 
             const cacheObject = {
@@ -18,24 +23,29 @@ class StorageManager {
                 expiry: expiryTimestamp
             };
 
+            // storage key ile veriyi JSON formatinda kaydet
             localStorage.setItem(this._getStorageKey(key), JSON.stringify(cacheObject));
 
-            return data;
         } catch (e) {
-            return data;
+            console.error('data not saved');
         }
     }
 
+    // veriyi local storage'dan getir.
     getSavedData(key) {
         try {
             const cacheString = localStorage.getItem(this._getStorageKey(key));
 
+            // veri yoksa null dondur ve fonksiyonu bitir.
             if (!cacheString) return null;
 
+            // kaydedilen veriyi ve expiry timestamp degerini ayir
             const {data, expiry} = JSON.parse(cacheString);
 
+            // expiry timestamp yoksa veriyi dondur.
             if (!expiry) return data;
 
+            // expiry time dolmus ise veriyi local storage'dan sil ve null dondur.
             if (Date.now() > expiry) {
                 localStorage.removeItem(this._getStorageKey(key));
                 return null;
@@ -49,13 +59,16 @@ class StorageManager {
 }
 
 class RequestManager {
+    // caching ozellikleri icin storage manager'i dependency olarak iceri al
     constructor(storageManager) {
         this.storage = storageManager;
     }
 
     get({url, onData, onPending = null}) {
+        // onPending callback verildiyse true degeri gonder
         onPending?.(true);
 
+        // verilen url ile daha once veri cache edildiyse getir
         const data = this.storage.getSavedData(url);
         if (!data) {
             $.ajax({
@@ -63,20 +76,25 @@ class RequestManager {
                 type: "GET",
                 dataType: 'json',
                 success: (data) => {
+                    // veriyi sakla
                     this.storage.saveData(url, data);
 
-                    // add some timeout to see placeholders explicitly
+                    // product placeholder card'larin duzgun bir sekilde goruntulenebilmesi icin biraz gecikme ekle
                     setTimeout(() => {
+                        // onPending callback verildiyse false degeri gonder
                         onPending?.(false);
 
+                        // veriyi onData callback'e gonder
                         onData(data);
                     }, 500);
                 },
                 error: () => {
+                    // onPending callback verildiyse false degeri gonder
                     onPending?.(false);
                 }
             });
         } else {
+            // verilen url ile cache edilmis veriyi onData callback'e gonder
             onPending?.(false);
             onData(data);
         }
@@ -84,10 +102,12 @@ class RequestManager {
 }
 
 class UIUtils {
+    // tarayici locale degerini al
     constructor() {
         this._locale = navigator.language;
     }
 
+    // locale'a gore verilen fiyati formatla
     formatPrice(price) {
         return new Intl.NumberFormat(this._locale, {
             minimumFractionDigits: 2,
@@ -97,19 +117,25 @@ class UIUtils {
 }
 
 class ProductCarousel {
+    // hangi block'tan sonra gelecekse o blogun selector'unu al
     constructor(prevBlockSelector) {
+        // storage manager'i init et 10 saniye caching suresi ile
         this.storage = new StorageManager({
             defaultCachingDuration: 10_000,
         });
 
+        // request manager'i init et
         this.request = new RequestManager(this.storage);
 
+        // component icin gerekli css'i ekle
         this.buildCss();
 
         this.uiUtils = new UIUtils();
 
-        this.$productCarouselContainer = this.buildProductCarouselContainer(prevBlockSelector, "Beğenebileceğinizi düşündüklerimiz");
+        // urun cardlari ve placeholderlarinin eklenecegi container'i olustur
+        this.buildProductCarouselContainer(prevBlockSelector, "Beğenebileceğinizi düşündüklerimiz");
 
+        // urunleri yakala
         this.fetchProducts();
 
         this.initializeEventListeners();
@@ -119,12 +145,14 @@ class ProductCarousel {
         this.request.get({
             url: "https://gist.githubusercontent.com/sevindi/8bcbde9f02c1d4abe112809c974e1f49/raw/9bf93b58df623a9b16f1db721cd0a7a539296cf0/products.json",
             onData: (products) => {
+                // veri gelince urun card'larini olustur
                 for (let i = 0; i < products.length; i++) {
                     const productListItem = this.buildProductListItem(products[i]);
                     $(document).find("ul.uYproduct-list").append(productListItem);
                 }
             },
             onPending: (pending) => {
+                // veri yuklenirken placholder'lari goster
                 if (pending) {
                     $(document).find("ul.uYproduct-list").css("pointer-events", "none");
                     for (let i = 0; i < 8; i++) {
@@ -603,6 +631,7 @@ body {
 }
 `;
 
+        // gereksiz bosluklari kaldirarak css icerigini minify et
         const minCss = css
             .replace(/\s+/g, ' ')
             .replace(/\s*{\s*/g, '{')
@@ -615,6 +644,7 @@ body {
     }
 
     buildProductCarouselContainer(anchorSelector, title) {
+        // kendisinden sonra eklenecek elementi bul
         const $anchor = $(anchorSelector);
 
         return $anchor.after(`
@@ -634,11 +664,13 @@ body {
         `);
     }
 
+    // urun card'i olustur
     buildProductListItem({id, brand, name, url, img, price, original_price, rating, rating_count}) {
         const priceNow = `
             <span class="uYprice-now${original_price > price ? " uYdiscounted" : ""}">${this.uiUtils.formatPrice(price)} TL</span>
         `;
 
+        // indirim yuzdesini hesapla
         const discountPercentage = Math.floor(((original_price - price) / original_price) * 100);
         const discount = original_price > price ? `
             <div class="uYdiscount">
@@ -647,12 +679,14 @@ body {
             </div>
         ` : '';
 
+        // urun puanini temsil edecek rating bar'i hazirla
         let ratingItems = "";
         for (let i = 0; i < 5; i++) {
             const filled = Math.ceil(rating ?? 0) >= i + 1;
             ratingItems += `<li><i class='star cx-icon fas fa-star ng-star-inserted${filled ? " uYfilled" : ""}'></i></li>`;
         }
 
+        // urunun favorilere eklenip eklenmedigine gore default/filed favorite button olustur
         const buildFavoriteButton = (id) => {
             const isFavorite = this.isFavoriteProduct(id);
 
@@ -701,6 +735,7 @@ body {
         `
     }
 
+    // veriler yuklenirken kullanilacak placholder product card olustur
     buildProductListItemPlaceholder() {
         return `
             <li class="uYproduct-list__item uYplaceholder">
@@ -726,6 +761,7 @@ body {
         `;
     }
 
+    // urun id'sini favori urunler listesine ekle
     saveFavoriteProduct(productId) {
         const favoriteProductIds = this.storage.getSavedData("favoriteProductIds") ?? [];
 
@@ -736,12 +772,14 @@ body {
         this.storage.saveData("favoriteProductIds", favoriteProductIds, 0)
     }
 
+    // urun id'sini favori urunler listesinde mi diye kontrol et
     isFavoriteProduct(productId) {
         const favoriteProductIds = this.storage.getSavedData("favoriteProductIds") ?? [];
 
         return favoriteProductIds.includes(productId);
     }
 
+    // urun id'sini favori urunler listesinden kaldir
     removeFavoriteProduct(productId) {
         const favoriteProductIds = this.storage.getSavedData("favoriteProductIds");
 
@@ -753,39 +791,58 @@ body {
     }
 
     initializeEventListeners() {
+        // carousel ozelligine sahip olacak elementi sec
         const $slider = $('.uYproduct-list');
+
+        // scroll durumunu kontrol etmek icin degiskenleri olustur
         let isDown = false;
         let startX;
         let scrollLeft;
 
+        // mouse tiklanildiginda scroll'a basla
         $slider.on('mousedown', function (e) {
             isDown = true;
+
+            // cursor ozelligini degistir
             $slider.addClass('uYdragging');
+            // mouseun element icindeki x konumunu hesapla
             startX = e.pageX - $slider.offset().left;
+            // current scroll pozisyonunu al
             scrollLeft = $slider.scrollLeft();
+
+            // metinlerin secilmesi gibi drag ozelliklerini engelle
             e.preventDefault();
         });
 
+        // mouse birakildiginda cursor degerini degistir
         $(document).on('mouseup', function () {
             isDown = false;
             $slider.removeClass('uYdragging');
         });
 
+        // mouse hareket ederken grab edildiyse scroll et
         $(document).on('mousemove', function (e) {
+            // grab yoksa scroll iptal
             if (!isDown) return;
             const x = e.pageX - $slider.offset().left;
+            // scroll mesafesini hesapla
             const walk = (x - startX) * 1.5;
+            // scroll durumunu guncelle
             $slider.scrollLeft(scrollLeft - walk);
         });
 
+        // carousel control butonlari ile urun card'larini saga/sola kaydirmayi sagla
         $('.uYproduct-group__content').on('click', function (e) {
             const productListItemWidth = $(this).find(".uYproduct-list").children(":first").width();
+
+            // prev buton tiklandiysa sola kaydir
             if ($(e.target).hasClass("uYswiper-prev")) {
                 $slider.animate({
                     scrollLeft: $slider.scrollLeft() - productListItemWidth,
                 }, 100);
             }
 
+            // next buton tiklandiysa saga kaydir
             if ($(e.target).hasClass("uYswiper-next")) {
                 $slider.animate({
                     scrollLeft: $slider.scrollLeft() + productListItemWidth
@@ -794,27 +851,35 @@ body {
         });
 
         $(".uYproduct-list").on("click", (e) => {
+            // sepete ekleme butonuna tiklanirsa urun sayfasina yonlendirmeyi engelle
             if ($(e.target).hasClass("uYbtn-cart")) {
                 e.preventDefault();
             }
 
+            // favori butonuna tiklanirsa urun sayfasina yonlendirmeyi engelle
             if ($(e.target).closest("button").hasClass("uYbtn-favorite")) {
                 e.preventDefault();
 
+                // urun id getir
                 const productId = $(e.target).closest(".uYproduct-list__item").data("id");
+
+                // urun favori durumunu getir
                 const isFavorite = !!+$(e.target).closest("button").data("favorite");
 
+                // urunu onceki duruma gore favorilerden ekle/cikar
                 if (isFavorite) {
                     this.removeFavoriteProduct(productId);
                 } else {
                     this.saveFavoriteProduct(productId);
                 }
 
+                // favorite button gorunumunu toggle et
                 this.updateFavoriteButton(productId, !isFavorite);
             }
         });
     }
 
+    // urun durumuna gore favorite button default/filled durumunu guncelle
     updateFavoriteButton(productId, isFavorite) {
         const $button = $(".uYproduct-list").find(`.uYproduct-list__item[data-id="${productId}"]`).find("button.uYbtn-favorite");
         $button.data("favorite", isFavorite ? "1" : "0");
@@ -830,6 +895,7 @@ class App {
         });
     }
 
+    // product carousel icin kullanilacak jquery surumunu dom'a ekle ve min.js loaded olduysa callback function'i cagir
     buildDependencies(cb) {
         const script = document.createElement('script');
         script.src = 'https://code.jquery.com/jquery-3.7.1.min.js';
