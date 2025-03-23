@@ -123,19 +123,19 @@ class ProductCarousel {
             onData: (products) => {
                 for (let i = 0; i < products.length; i++) {
                     const productListItem = this.buildProductListItem(products[i]);
-                    $(document).find("ul.product-list").append(productListItem);
+                    $(document).find("ul.uYproduct-list").append(productListItem);
                 }
             },
             onPending: (pending) => {
                 if (pending) {
-                    $(document).find("ul.product-list").css("pointer-events", "none");
+                    $(document).find("ul.uYproduct-list").css("pointer-events", "none");
                     for (let i = 0; i < 8; i++) {
                         const productListItemPlaceholder = this.buildProductListItemPlaceholder();
-                        $(document).find("ul.product-list").append(productListItemPlaceholder);
+                        $(document).find("ul.uYproduct-list").append(productListItemPlaceholder);
                     }
                 } else {
-                    $(document).find("ul.product-list").removeAttr("style");
-                    $(document).find("ul.product-list").empty();
+                    $(document).find("ul.uYproduct-list").removeAttr("style");
+                    $(document).find("ul.uYproduct-list").empty();
                 }
             },
         });
@@ -143,7 +143,7 @@ class ProductCarousel {
 
     buildCss() {
         const css = `
-@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
 * {
@@ -156,36 +156,36 @@ body {
     font-family: 'Quicksand', sans-serif;
 }
 
-.container {
+.uYcontainer {
     margin: 0 auto
 }
 
-.product-group {
+.uYproduct-group {
     display: flex;
     flex-direction: column;
     box-shadow: 15px 15px 30px 0 #ebebeb80;
     border-radius: 0 0 36px 36px;
 }
 
-.product-group .product-group__header {
+.uYproduct-group .uYproduct-group__header {
     background-color: #fef6eb;
     padding: 24px 54px;
     border-radius: 36px 36px 0 0;
 }
 
-.product-group .product-group__header .title {
+.uYproduct-group .uYproduct-group__header .uYtitle {
     font-weight: 700;
     font-size: 1.75rem;
     line-height: 1.1;
     color: #f28e00;
 }
 
-.product-group .product-group__content {
+.uYproduct-group .uYproduct-group__content {
     position: relative;
     margin: 24px 0;
 }
 
-.product-group .product-group__content .product-list {
+.uYproduct-group .uYproduct-group__content .uYproduct-list {
     list-style: none;
     cursor: grab;
 
@@ -204,16 +204,16 @@ body {
     scroll-behavior: smooth;
 }
 
-.product-group .product-group__content .product-list::-webkit-scrollbar {
+.uYproduct-group .uYproduct-group__content .uYproduct-list::-webkit-scrollbar {
     display: none;
 }
 
-.product-group .product-group__content .product-list.dragging {
+.uYproduct-group .uYproduct-group__content .uYproduct-list.uYdragging {
     cursor: grabbing;
     user-select: none;
 }
 
-.product-group .product-group__content .product-list .product-list__item {
+.uYproduct-group .uYproduct-group__content .uYproduct-list .uYproduct-list__item {
     margin-right: 24px;
 
     flex: 0 0 47%;
@@ -221,20 +221,20 @@ body {
     scroll-snap-align: start;
 }
 
-.product-group .product-group__content .product-list .product-list__item.placeholder {
+.uYproduct-group .uYproduct-group__content .uYproduct-list .uYproduct-list__item.uYplaceholder {
     pointer-events: none;
 }
 
-.product-group .product-group__content .product-list .product-list__item:last-child {
+.uYproduct-group .uYproduct-group__content .uYproduct-list .uYproduct-list__item:last-child {
     margin-right: 0;
 }
 
-.product-group .product-group__content .product-list .product-list__item a {
+.uYproduct-group .uYproduct-group__content .uYproduct-list .uYproduct-list__item a {
     text-decoration: none;
 }
 
-.product-group .product-group__content .swiper-next,
-.product-group .product-group__content .swiper-prev {
+.uYproduct-group .uYproduct-group__content .uYswiper-next,
+.uYproduct-group .uYproduct-group__content .uYswiper-prev {
     cursor: pointer;
     width: 50px;
     height: 50px;
@@ -245,26 +245,26 @@ body {
     border: 1px solid #0000;
 }
 
-.product-group .product-group__content .swiper-next:hover,
-.product-group .product-group__content .swiper-prev:hover {
+.uYproduct-group .uYproduct-group__content .uYswiper-next:hover,
+.uYproduct-group .uYproduct-group__content .uYswiper-prev:hover {
     border: 1px solid #f28e00;
     background-color: #ffffff;
 }
 
-.product-group .product-group__content .swiper-prev {
+.uYproduct-group .uYproduct-group__content .uYswiper-prev {
     background: url(/assets/svg/prev.svg) no-repeat;
     background-color: #fef6eb;
     background-position: 18px;
     left: -65px;
 }
-.product-group .product-group__content .swiper-next {
+.uYproduct-group .uYproduct-group__content .uYswiper-next {
     background: url(/assets/svg/next.svg) no-repeat;
     background-color: #fef6eb;
     background-position: 21px;
     right: -65px;
 }
 
-.product-card {
+.uYproduct-card {
     font-family: 'Poppins', sans-serif;
 
     position: relative;
@@ -281,27 +281,27 @@ body {
     cursor: pointer;
 }
 
-.product-card.placeholder {
+.uYproduct-card.uYplaceholder {
     padding: 0;
     overflow: hidden;
 }
 
-.product-card:hover {
+.uYproduct-card:hover {
     outline: 3px solid #f28e00;
 }
 
-.product-card .product-card__header {
+.uYproduct-card .uYproduct-card__header {
     width: 100%;
     aspect-ratio: 1/1;
     margin-bottom: 42px;
     padding: 0 16px
 }
 
-.product-card .product-card__header.placeholder {
+.uYproduct-card .uYproduct-card__header.uYplaceholder {
     background-color: #ededed;
 }
 
-.product-card .product-card__header img {
+.uYproduct-card .uYproduct-card__header img {
     width: 100%;
     aspect-ratio: 1/1;
 
@@ -309,7 +309,7 @@ body {
     object-position: center;
 }
 
-.product-card .product-card__title {
+.uYproduct-card .uYproduct-card__title {
     width: 100%;
     height: 44px;
     padding: 0 16px;
@@ -317,7 +317,7 @@ body {
     overflow: hidden;
 }
 
-.product-card .product-card__title .title {
+.uYproduct-card .uYproduct-card__title .uYtitle {
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
@@ -328,14 +328,14 @@ body {
     font-weight: 500;
 }
 
-.product-card .product-card__title .title.placeholder {
+.uYproduct-card .uYproduct-card__title .uYtitle.uYplaceholder {
     height: 15px;
     width: 75%;
     border-radius: 8px;
     background-color: #ededed;
 }
 
-.product-card .product-card__rating {
+.uYproduct-card .uYproduct-card__rating {
     padding: 0 16px;
 
     display: flex;
@@ -343,30 +343,30 @@ body {
     column-gap: 8px;
 }
 
-.product-card .product-card__rating .rating-bar {
+.uYproduct-card .uYproduct-card__rating .uYrating-bar {
     list-style: none;
 
     display: flex;
     column-gap: 3px;
 }
 
-.product-card .product-card__rating .rating-bar.placeholder {
+.uYproduct-card .uYproduct-card__rating .uYrating-bar.uYplaceholder {
     width: 112px;
     height: 27px;
     border-radius: 14px;
     background-color: #ededed;
 }
 
-.product-card .product-card__rating .rating-bar li {
+.uYproduct-card .uYproduct-card__rating .uYrating-bar li {
     color: #d7d7d7;
     font-size: 1rem;
 }
 
-.product-card .product-card__rating .rating-bar li .filled {
+.uYproduct-card .uYproduct-card__rating .uYrating-bar li .uYfilled {
     color: #fed100;
 }
 
-.product-card .product-card__rating .rating-count {
+.uYproduct-card .uYproduct-card__rating .uYrating-count {
     margin-bottom: 3px;
 
     display: block;
@@ -375,7 +375,7 @@ body {
     color: #7d7d7d;
 }
 
-.product-card .product-card__pricing {
+.uYproduct-card .uYproduct-card__pricing {
     padding: 0 16px;
 
     display: flex;
@@ -385,11 +385,11 @@ body {
     color: #7d7d7d;
 }
 
-.product-card .product-card__pricing .discounted {
+.uYproduct-card .uYproduct-card__pricing .uYdiscounted {
     color: #00a365;
 }
 
-.product-card .product-card__pricing .discount {
+.uYproduct-card .uYproduct-card__pricing .uYdiscount {
     height: 28px;
 
     display: flex;
@@ -397,13 +397,13 @@ body {
     column-gap: 8px;
 }
 
-.product-card .product-card__pricing .discount .price-old {
+.uYproduct-card .uYproduct-card__pricing .uYdiscount .uYprice-old {
     text-decoration: line-through;
     font-size: 14px;
     font-weight: 500;
 }
 
-.product-card .product-card__pricing .discount .percentage {
+.uYproduct-card .uYproduct-card__pricing .uYdiscount .uYpercentage {
     display: inline-flex;
     align-items: center;
     column-gap: 2px;
@@ -412,37 +412,37 @@ body {
     font-weight: 700;
 }
 
-.product-card .product-card__pricing .discount i {
+.uYproduct-card .uYproduct-card__pricing .uYdiscount i {
     font-size: 1.4rem;
 }
 
-.product-card .product-card__pricing .price-now {
+.uYproduct-card .uYproduct-card__pricing .uYprice-now {
     margin-top: 28px;
 
     font-size: 24px;
     font-weight: 600;
 }
 
-.product-card .product-card__pricing .price-now.placeholder {
+.uYproduct-card .uYproduct-card__pricing .uYprice-now.uYplaceholder {
     height: 37px;
     border-radius: 19px;
     background-color: #ededed;
     width: 128px;
 }
 
-.product-card .product-card__pricing .price-now.discounted {
+.uYproduct-card .uYproduct-card__pricing .uYprice-now.uYdiscounted {
     margin-top: 0;
 }
 
-.product-card .product-card__promotion {
+.uYproduct-card .uYproduct-card__promotion {
     height: 72px;
 }
 
-.product-card .product-card__footer {
+.uYproduct-card .uYproduct-card__footer {
     padding: 16px 16px 12px 16px;
 }
 
-.product-card .product-card__footer .btn-cart {
+.uYproduct-card .uYproduct-card__footer .uYbtn-cart {
     cursor: pointer;
     appearance: none;
     outline: none;
@@ -459,18 +459,18 @@ body {
     color: #f28e00;
 }
 
-.product-card .product-card__footer .btn-cart.placeholder {
+.uYproduct-card .uYproduct-card__footer .uYbtn-cart.uYplaceholder {
     height: 53px;
     background-color: #ededed;
 }
 
-.product-card .product-card__footer .btn-cart:hover {
+.uYproduct-card .uYproduct-card__footer .uYbtn-cart:hover {
     background-color: #f28e00;
 
     color: #ffffff;
 }
 
-.product-card .product-card__overlay {
+.uYproduct-card .uYproduct-card__overlay {
     pointer-events: none;
     position: absolute;
     width: 100%;
@@ -478,7 +478,7 @@ body {
     padding: 16px;
 }
 
-.product-card .product-card__overlay .btn-favorite {
+.uYproduct-card .uYproduct-card__overlay .uYbtn-favorite {
     pointer-events: auto;
     position: absolute;
     top: 5px;
@@ -502,76 +502,77 @@ body {
     border-radius: 50%;
 }
 
-.product-card .product-card__overlay .btn-favorite .heart-icon,
-.product-card .product-card__overlay .btn-favorite:hover .heart-icon.hovered {
+.uYproduct-card .uYproduct-card__overlay .uYbtn-favorite .uYheart-icon,
+.uYproduct-card .uYproduct-card__overlay .uYbtn-favorite:hover .uYheart-icon.uYhovered {
     display: block;
 }
 
-.product-card .product-card__overlay .btn-favorite .heart-icon.hovered,
-.product-card .product-card__overlay .btn-favorite:hover .heart-icon {
+.uYproduct-card .uYproduct-card__overlay .uYbtn-favorite .uYheart-icon.uYhovered,
+.uYproduct-card .uYproduct-card__overlay .uYbtn-favorite:hover .uYheart-icon {
     display: none;
 }
 
 @media (min-width: 576px) {
-    .container {
+    .uYcontainer {
         max-width: 540px;
     }
 
-    .product-group .product-group__content .product-list .product-list__item {
+    .uYproduct-group .uYproduct-group__content .uYproduct-list .uYproduct-list__item {
         flex: 0 0 48%;
     }
 
-    .product-card .product-card__rating .rating-bar {
+    .uYproduct-card .uYproduct-card__rating .uYrating-bar {
         list-style: none;
 
         display: flex;
         column-gap: 6px;
     }
 
-    .product-card .product-card__rating .rating-bar li {
+    .uYproduct-card .uYproduct-card__rating .uYrating-bar li {
         color: #d7d7d7;
         font-size: 1.1rem;
     }
 }
 
 @media (min-width: 768px) {
-    .container {
+    .uYcontainer {
         max-width: 720px;
     }
 }
 
 @media (min-width: 992px) {
-    .container {
+    .uYcontainer {
         max-width: 960px;
     }
 
-    .product-group .product-group__content .product-list .product-list__item {
+    .uYproduct-group .uYproduct-group__content .uYproduct-list .uYproduct-list__item {
         flex: 0 0 31.8%;
     }
 }
 
 @media (min-width: 1280px) {
-    .container {
+    .uYcontainer {
         max-width: 1180px;
     }
 
-    .product-group .product-group__content .product-list .product-list__item {
+    .uYproduct-group .uYproduct-group__content .uYproduct-list .uYproduct-list__item {
         flex: 0 0 23.5%;
     }
 }
 
 @media (min-width: 1480px) {
-    .container {
+    .uYcontainer {
         max-width: 1296px;
     }
 
-    .product-group .product-group__content .product-list .product-list__item {
+    .uYproduct-group .uYproduct-group__content .uYproduct-list .uYproduct-list__item {
         flex: 0 0 18.56%
     }
 }
-        `;
+`;
 
-        const minCss = css.replace(/\s+/g, ' ')
+        const minCss = css
+            .replace(/\s+/g, ' ')
             .replace(/\s*{\s*/g, '{')
             .replace(/\s*}\s*/g, '}')
             .replace(/\s*:\s*/g, ':')
@@ -592,16 +593,16 @@ body {
         const $anchor = $(anchorSelector);
 
         return $anchor.after(`
-        <div class="container">
-            <div class="product-group">
-                <div class="product-group__header">
-                    <h2 class="title">${title}</h2>
+        <div class="uYcontainer">
+            <div class="uYproduct-group">
+                <div class="uYproduct-group__header">
+                    <h2 class="uYtitle">${title}</h2>
                 </div>
-                <div class="product-group__content">
-                    <ul class="product-list">
+                <div class="uYproduct-group__content">
+                    <ul class="uYproduct-list">
                     </ul>
-                    <button class="swiper-prev"></button>
-                    <button class="swiper-next"></button>
+                    <button class="uYswiper-prev"></button>
+                    <button class="uYswiper-next"></button>
                 </div>
             </div>
         </div> 
@@ -610,63 +611,63 @@ body {
 
     buildProductListItem({id, brand, name, url, img, price, original_price, rating, rating_count}) {
         const priceNow = `
-            <span class="price-now${original_price > price ? " discounted" : ""}">${this.uiUtils.formatPrice(price)} TL</span>
+            <span class="uYprice-now${original_price > price ? " uYdiscounted" : ""}">${this.uiUtils.formatPrice(price)} TL</span>
         `;
 
         const discountPercentage = Math.floor(((original_price - price) / original_price) * 100);
         const discount = original_price > price ? `
-            <div class="discount">
-                <span class="price-old discounted">${this.uiUtils.formatPrice(original_price)} TL</span>
-                <span class="percentage discounted">%${discountPercentage}<i class="icon icon-decrease"></i></span>
+            <div class="uYdiscount">
+                <span class="uYprice-old uYdiscounted">${this.uiUtils.formatPrice(original_price)} TL</span>
+                <span class="uYpercentage uYdiscounted">%${discountPercentage}<i class="icon icon-decrease"></i></span>
             </div>
         ` : '';
 
         let ratingItems = "";
         for (let i = 0; i < 5; i++) {
             const filled = Math.ceil(rating ?? 0) >= i + 1;
-            ratingItems += `<li><i class='star cx-icon fas fa-star ng-star-inserted${filled ? " filled" : ""}'></i></li>`;
+            ratingItems += `<li><i class='star cx-icon fas fa-star ng-star-inserted${filled ? " uYfilled" : ""}'></i></li>`;
         }
 
         const buildFavoriteButton = (id) => {
             const isFavorite = this.isFavoriteProduct(id);
 
             return `
-                <button class="btn-favorite"
+                <button class="uYbtn-favorite"
                         data-favorite="${isFavorite ? "1" : "0"}">
-                    <img src="${isFavorite ? "assets/svg/added-favorite.svg" : "assets/svg/default-favorite.svg"}" alt="heart" class="heart-icon">
-                    <img src="${isFavorite ? "assets/svg/added-favorite-hover.svg" : "assets/svg/default-hover-favorite.svg"}" alt="heart" class="heart-icon hovered">
+                    <img src="${isFavorite ? "assets/svg/added-favorite.svg" : "assets/svg/default-favorite.svg"}" alt="heart" class="uYheart-icon">
+                    <img src="${isFavorite ? "assets/svg/added-favorite-hover.svg" : "assets/svg/default-hover-favorite.svg"}" alt="heart" class="uYheart-icon uYhovered">
                 </button>
             `;
         };
 
         return `
-            <li class="product-list__item"
+            <li class="uYproduct-list__item"
                 data-id="${id}">
                 <a href="${url}" target="_blank">
-                    <div class="product-card">
-                        <div class="product-card__header">
+                    <div class="uYproduct-card">
+                        <div class="uYproduct-card__header">
                             <img src="${img}" alt="product-image">
                         </div>
-                        <div class="product-card__title">
-                            <h2 class="title"><b>${brand} -</b> ${name}</h2>
+                        <div class="uYproduct-card__title">
+                            <h2 class="uYtitle"><b>${brand} -</b> ${name}</h2>
                         </div>
-                        <div class="product-card__rating">
-                            <ul class="rating-bar">
+                        <div class="uYproduct-card__rating">
+                            <ul class="uYrating-bar">
                                 ${ratingItems}
                             </ul>
-                            <span class="rating-count">(${rating_count ?? 0})</span>
+                            <span class="uYrating-count">(${rating_count ?? 0})</span>
                         </div>
-                        <div class="product-card__pricing">
+                        <div class="uYproduct-card__pricing">
                             ${discount}
                             ${priceNow}
                         </div>
-                        <div class="product-card__promotion">
+                        <div class="uYproduct-card__promotion">
                         </div>
-                        <div class="product-card__footer">
-                            <button class="btn-cart">Sepete Ekle</button>
+                        <div class="uYproduct-card__footer">
+                            <button class="uYbtn-cart">Sepete Ekle</button>
                         </div>
                         
-                        <div class="product-card__overlay">
+                        <div class="uYproduct-card__overlay">
                             ${buildFavoriteButton(id)}
                         </div>
                     </div>
@@ -677,23 +678,23 @@ body {
 
     buildProductListItemPlaceholder() {
         return `
-            <li class="product-list__item placeholder">
-                <div class="product-card placeholder">
-                        <div class="product-card__header placeholder">
+            <li class="uYproduct-list__item uYplaceholder">
+                <div class="uYproduct-card uYplaceholder">
+                        <div class="uYproduct-card__header uYplaceholder">
                         </div>
-                        <div class="product-card__title">
-                            <div class="title placeholder"></div>
+                        <div class="uYproduct-card__title">
+                            <div class="uYtitle uYplaceholder"></div>
                         </div>
-                        <div class="product-card__rating">
-                            <div class="rating-bar placeholder""></div>
+                        <div class="uYproduct-card__rating">
+                            <div class="uYrating-bar uYplaceholder""></div>
                         </div>
-                        <div class="product-card__pricing">
-                            <div class="price-now placeholder"></div>
+                        <div class="uYproduct-card__pricing">
+                            <div class="uYprice-now uYplaceholder"></div>
                         </div>
-                        <div class="product-card__promotion">
+                        <div class="uYproduct-card__promotion">
                         </div>
-                        <div class="product-card__footer">
-                            <div class="btn-cart placeholder"></div>
+                        <div class="uYproduct-card__footer">
+                            <div class="uYbtn-cart uYplaceholder"></div>
                         </div>
                     </div>
             </li>
@@ -707,7 +708,7 @@ body {
 
         favoriteProductIds.push(productId);
 
-        this.storage.saveData("favoriteProductIds", favoriteProductIds)
+        this.storage.saveData("favoriteProductIds", favoriteProductIds, 0)
     }
 
     isFavoriteProduct(productId) {
@@ -723,18 +724,18 @@ body {
 
         const newFavoriteProductIds = favoriteProductIds.filter((fpi) => fpi !== productId);
 
-        this.storage.saveData("favoriteProductIds", newFavoriteProductIds)
+        this.storage.saveData("favoriteProductIds", newFavoriteProductIds, 0)
     }
 
     initializeEventListeners() {
-        const $slider = $('.product-list');
+        const $slider = $('.uYproduct-list');
         let isDown = false;
         let startX;
         let scrollLeft;
 
         $slider.on('mousedown', function (e) {
             isDown = true;
-            $slider.addClass('dragging');
+            $slider.addClass('uYdragging');
             startX = e.pageX - $slider.offset().left;
             scrollLeft = $slider.scrollLeft();
             e.preventDefault();
@@ -742,7 +743,7 @@ body {
 
         $(document).on('mouseup', function () {
             isDown = false;
-            $slider.removeClass('dragging');
+            $slider.removeClass('uYdragging');
         });
 
         $(document).on('mousemove', function (e) {
@@ -752,43 +753,43 @@ body {
             $slider.scrollLeft(scrollLeft - walk);
         });
 
-        $('.product-group__content').on('click', function (e) {
-            const productListItemWidth = $(this).find(".product-list").children(":first").width();
-            if ($(e.target).hasClass("swiper-prev")) {
+        $('.uYproduct-group__content').on('click', function (e) {
+            const productListItemWidth = $(this).find(".uYproduct-list").children(":first").width();
+            if ($(e.target).hasClass("uYswiper-prev")) {
                 $slider.animate({
                     scrollLeft: $slider.scrollLeft() - productListItemWidth,
                 }, 100);
             }
 
-            if ($(e.target).hasClass("swiper-next")) {
+            if ($(e.target).hasClass("uYswiper-next")) {
                 $slider.animate({
                     scrollLeft: $slider.scrollLeft() + productListItemWidth
                 }, 100);
             }
         });
 
-        $(".product-list").on("click", (e) => {
-            if ($(e.target).hasClass("btn-cart")) {
+        $(".uYproduct-list").on("click", (e) => {
+            if ($(e.target).hasClass("uYbtn-cart")) {
                 e.preventDefault();
             }
 
-            if ($(e.target).closest("button").hasClass("btn-favorite")) {
+            if ($(e.target).closest("button").hasClass("uYbtn-favorite")) {
                 e.preventDefault();
 
                 if (+$(e.target).closest("button").data("favorite")) {
-                    this.removeFavoriteProduct($(e.target).closest(".product-list__item").data("id"));
+                    this.removeFavoriteProduct($(e.target).closest(".uYproduct-list__item").data("id"));
 
                     $(e.target).closest("button").data("favorite", "0");
 
-                    $(e.target).closest("button").find(".heart-icon").attr("src", "assets/svg/default-favorite.svg");
-                    $(e.target).closest("button").find(".heart-icon.hovered").attr("src", "assets/svg/default-hover-favorite.svg");
+                    $(e.target).closest("button").find(".uYheart-icon").attr("src", "assets/svg/default-favorite.svg");
+                    $(e.target).closest("button").find(".uYheart-icon.uYhovered").attr("src", "assets/svg/default-hover-favorite.svg");
                 } else {
-                    this.saveFavoriteProduct($(e.target).closest(".product-list__item").data("id"));
+                    this.saveFavoriteProduct($(e.target).closest(".uYproduct-list__item").data("id"));
 
                     $(e.target).closest("button").data("favorite", "1");
 
-                    $(e.target).closest("button").find(".heart-icon").attr("src", "assets/svg/added-favorite.svg");
-                    $(e.target).closest("button").find(".heart-icon.hovered").attr("src", "assets/svg/added-favorite-hover.svg");
+                    $(e.target).closest("button").find(".uYheart-icon").attr("src", "assets/svg/added-favorite.svg");
+                    $(e.target).closest("button").find(".uYheart-icon.uYhovered").attr("src", "assets/svg/added-favorite-hover.svg");
                 }
             }
         });
