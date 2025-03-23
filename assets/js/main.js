@@ -118,7 +118,7 @@ class UIUtils {
 
 class ProductCarousel {
     // hangi block'tan sonra gelecekse o blogun selector'unu al
-    constructor(prevBlockSelector) {
+    constructor({prevBlockSelector, title, productsUrl}) {
         // storage manager'i init et 10 saniye caching suresi ile
         this.storage = new StorageManager({
             defaultCachingDuration: 10_000,
@@ -133,17 +133,17 @@ class ProductCarousel {
         this.uiUtils = new UIUtils();
 
         // urun cardlari ve placeholderlarinin eklenecegi container'i olustur
-        this.buildProductCarouselContainer(prevBlockSelector, "Beğenebileceğinizi düşündüklerimiz");
+        this.buildProductCarouselContainer(prevBlockSelector, title);
 
         // urunleri yakala
-        this.fetchProducts();
+        this.fetchProducts(productsUrl);
 
         this.initializeEventListeners();
     }
 
-    fetchProducts() {
+    fetchProducts(url) {
         this.request.get({
-            url: "https://gist.githubusercontent.com/sevindi/8bcbde9f02c1d4abe112809c974e1f49/raw/9bf93b58df623a9b16f1db721cd0a7a539296cf0/products.json",
+            url,
             onData: (products) => {
                 // veri gelince urun card'larini olustur
                 for (let i = 0; i < products.length; i++) {
@@ -891,7 +891,11 @@ body {
 class App {
     constructor() {
         this.buildDependencies(() => {
-            this.productCarousel = new ProductCarousel(".Section1");
+            new ProductCarousel({
+                prevBlockSelector: ".Section1",
+                title: "Beğenebileceğinizi düşündüklerimiz",
+                productsUrl: "https://gist.githubusercontent.com/sevindi/8bcbde9f02c1d4abe112809c974e1f49/raw/9bf93b58df623a9b16f1db721cd0a7a539296cf0/products.json"
+            });
         });
     }
 
