@@ -98,23 +98,21 @@ class UIUtils {
 
 class ProductCarousel {
     constructor(prevBlockSelector) {
-        this.buildDependencies(() => {
-            this.storage = new StorageManager({
-                defaultCachingDuration: 10_000,
-            });
-
-            this.request = new RequestManager(this.storage);
-
-            this.buildCss();
-
-            this.uiUtils = new UIUtils();
-
-            this.$productCarouselContainer = this.buildProductCarouselContainer(prevBlockSelector, "Beğenebileceğinizi düşündüklerimiz");
-
-            this.fetchProducts();
-
-            this.initializeEventListeners();
+        this.storage = new StorageManager({
+            defaultCachingDuration: 10_000,
         });
+
+        this.request = new RequestManager(this.storage);
+
+        this.buildCss();
+
+        this.uiUtils = new UIUtils();
+
+        this.$productCarouselContainer = this.buildProductCarouselContainer(prevBlockSelector, "Beğenebileceğinizi düşündüklerimiz");
+
+        this.fetchProducts();
+
+        this.initializeEventListeners();
     }
 
     fetchProducts() {
@@ -616,13 +614,6 @@ body {
         $("<style>").html(minCss).appendTo("head");
     }
 
-    buildDependencies(cb) {
-        const script = document.createElement('script');
-        script.src = 'https://code.jquery.com/jquery-3.7.1.min.js';
-        script.onload = cb;
-        document.body.appendChild(script);
-    }
-
     buildProductCarouselContainer(anchorSelector, title) {
         const $anchor = $(anchorSelector);
 
@@ -810,32 +801,40 @@ body {
             if ($(e.target).closest("button").hasClass("uYbtn-favorite")) {
                 e.preventDefault();
 
-                if (+$(e.target).closest("button").data("favorite")) {
-                    this.removeFavoriteProduct($(e.target).closest(".uYproduct-list__item").data("id"));
+                const productId = $(e.target).closest(".uYproduct-list__item").data("id");
+                const isFavorite = !!+$(e.target).closest("button").data("favorite");
 
-                    $(e.target).closest("button").data("favorite", "0");
-
-                    $(e.target).closest("button").find(".uYheart-icon").attr("src", "assets/svg/default-favorite.svg");
-                    $(e.target).closest("button").find(".uYheart-icon.uYhovered").attr("src", "assets/svg/default-hover-favorite.svg");
+                if (isFavorite) {
+                    this.removeFavoriteProduct(productId);
                 } else {
-                    this.saveFavoriteProduct($(e.target).closest(".uYproduct-list__item").data("id"));
-
-                    $(e.target).closest("button").data("favorite", "1");
-
-                    $(e.target).closest("button").find(".uYheart-icon").attr("src", "assets/svg/added-favorite.svg");
-                    $(e.target).closest("button").find(".uYheart-icon.uYhovered").attr("src", "assets/svg/added-favorite-hover.svg");
+                    this.saveFavoriteProduct(productId);
                 }
+
+                this.updateFavoriteButton(productId, !isFavorite);
             }
         });
+    }
+
+    updateFavoriteButton(productId, isFavorite) {
+        const $button = $(".uYproduct-list").find(`.uYproduct-list__item[data-id="${productId}"]`).find("button.uYbtn-favorite");
+        $button.data("favorite", isFavorite ? "1" : "0");
+        $button.find(".uYheart-icon").attr("src", isFavorite ? "assets/svg/added-favorite.svg" : "assets/svg/default-favorite.svg");
+        $button.find(".uYheart-icon.uYhovered").attr("src", isFavorite ? "assets/svg/added-favorite-hover.svg" : "assets/svg/default-hover-favorite.svg");
     }
 }
 
 class App {
     constructor() {
-        this.productCarousel = new ProductCarousel(".Section1");
+        this.buildDependencies(() => {
+            this.productCarousel = new ProductCarousel(".Section1");
+        });
     }
 
-    initializeEventListeners() {
+    buildDependencies(cb) {
+        const script = document.createElement('script');
+        script.src = 'https://code.jquery.com/jquery-3.7.1.min.js';
+        script.onload = cb;
+        document.body.appendChild(script);
     }
 }
 
