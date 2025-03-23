@@ -143,9 +143,6 @@ class ProductCarousel {
 
     buildCss() {
         const css = `
-        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-
 * {
     box-sizing: border-box;
     margin: 0;
@@ -174,10 +171,12 @@ body {
 }
 
 .uYproduct-group .uYproduct-group__header .uYtitle {
+    font-family: Quicksand-Bold;
+    font-size: 3rem;
     font-weight: 700;
-    font-size: 1.75rem;
-    line-height: 1.1;
+    line-height: 1.11;
     color: #f28e00;
+    margin: 0;
 }
 
 .uYproduct-group .uYproduct-group__content {
@@ -358,12 +357,12 @@ body {
     background-color: #ededed;
 }
 
-.uYproduct-card .uYproduct-card__rating .uYrating-bar li {
+.uYproduct-card .uYproduct-card__rating .uYrating-bar li i{
     color: #d7d7d7;
-    font-size: 1rem;
+    font-size: 14px;
 }
 
-.uYproduct-card .uYproduct-card__rating .uYrating-bar li .uYfilled {
+.uYproduct-card .uYproduct-card__rating .uYrating-bar li i .uYfilled {
     color: #fed100;
 }
 
@@ -413,8 +412,12 @@ body {
     font-weight: 700;
 }
 
-.uYproduct-card .uYproduct-card__pricing .uYdiscount i {
-    font-size: 1.4rem;
+.uYproduct-card .uYproduct-card__pricing .uYdiscount .uYpercentage i {
+    display: inline-block;
+    height: 22px;
+    font-size: 22px;
+    margin-left: 3px;
+    margin-bottom: 6px;
 }
 
 .uYproduct-card .uYproduct-card__pricing .uYprice-now {
@@ -619,7 +622,7 @@ body {
         const discount = original_price > price ? `
             <div class="uYdiscount">
                 <span class="uYprice-old uYdiscounted">${this.uiUtils.formatPrice(original_price)} TL</span>
-                <span class="uYpercentage uYdiscounted">%${discountPercentage}<i class="icon icon-decrease"></i></span>
+                <span class="uYpercentage uYdiscounted"><span>%${discountPercentage}</span><i class="icon icon-decrease"></i></span>
             </div>
         ` : '';
 
