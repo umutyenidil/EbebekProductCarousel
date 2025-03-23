@@ -257,6 +257,21 @@ $(function () {
         $slider.scrollLeft(scrollLeft - walk);
     });
 
+    $('.product-group__content').on('click', function (e) {
+        const productListItemWidth = $(this).find(".product-list").children(":first").width();
+        if ($(e.target).hasClass("swiper-prev")) {
+            $slider.animate({
+                scrollLeft: $slider.scrollLeft() - productListItemWidth,
+            }, 100);
+        }
+
+        if ($(e.target).hasClass("swiper-next")) {
+            $slider.animate({
+                scrollLeft: $slider.scrollLeft() + productListItemWidth
+            }, 100);
+        }
+    });
+
     $(".product-list").on("click", (e) => {
         if ($(e.target).hasClass("btn-cart")) {
             e.preventDefault();

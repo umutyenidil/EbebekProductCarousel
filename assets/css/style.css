@@ -36,6 +36,7 @@ body {
 }
 
 .product-group .product-group__content {
+    position: relative;
     margin: 24px 0;
 }
 
@@ -85,6 +86,37 @@ body {
 
 .product-group .product-group__content .product-list .product-list__item a {
     text-decoration: none;
+}
+
+.product-group .product-group__content .swiper-next,
+.product-group .product-group__content .swiper-prev {
+    cursor: pointer;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    position: absolute;
+    bottom: 50%;
+    top: auto;
+    border: 1px solid #0000;
+}
+
+.product-group .product-group__content .swiper-next:hover,
+.product-group .product-group__content .swiper-prev:hover {
+    border: 1px solid #f28e00;
+    background-color: #ffffff;
+}
+
+.product-group .product-group__content .swiper-prev {
+    background: url(/assets/svg/prev.svg) no-repeat;
+    background-color: #fef6eb;
+    background-position: 18px;
+    left: -65px;
+}
+.product-group .product-group__content .swiper-next {
+    background: url(/assets/svg/next.svg) no-repeat;
+    background-color: #fef6eb;
+    background-position: 21px;
+    right: -65px;
 }
 
 .product-card {
