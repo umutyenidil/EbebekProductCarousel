@@ -103,13 +103,41 @@ class ProductCarousel {
                 defaultCachingDuration: 10_000,
             });
 
-            this.request = new RequestManager();
+            this.request = new RequestManager(this.storage);
 
             this.buildCss();
 
             this.uiUtils = new UIUtils();
 
-            this.productCarouselContainer = this.buildProductCarouselContainer(prevBlockSelector, "Beğenebileceğinizi düşündüklerimiz");
+            this.$productCarouselContainer = this.buildProductCarouselContainer(prevBlockSelector, "Beğenebileceğinizi düşündüklerimiz");
+
+            this.fetchProducts();
+
+            this.initializeEventListeners();
+        });
+    }
+
+    fetchProducts() {
+        this.request.get({
+            url: "https://gist.githubusercontent.com/sevindi/8bcbde9f02c1d4abe112809c974e1f49/raw/9bf93b58df623a9b16f1db721cd0a7a539296cf0/products.json",
+            onData: (products) => {
+                for (let i = 0; i < products.length; i++) {
+                    const productListItem = this.buildProductListItem(products[i]);
+                    $(document).find("ul.product-list").append(productListItem);
+                }
+            },
+            onPending: (pending) => {
+                if (pending) {
+                    $(document).find("ul.product-list").css("pointer-events", "none");
+                    for (let i = 0; i < 8; i++) {
+                        const productListItemPlaceholder = this.buildProductListItemPlaceholder();
+                        $(document).find("ul.product-list").append(productListItemPlaceholder);
+                    }
+                } else {
+                    $(document).find("ul.product-list").removeAttr("style");
+                    $(document).find("ul.product-list").empty();
+                }
+            },
         });
     }
 
@@ -443,6 +471,7 @@ body {
 }
 
 .product-card .product-card__overlay {
+    pointer-events: none;
     position: absolute;
     width: 100%;
     height: 100%;
@@ -450,6 +479,7 @@ body {
 }
 
 .product-card .product-card__overlay .btn-favorite {
+    pointer-events: auto;
     position: absolute;
     top: 5px;
     right: 20px;
@@ -594,11 +624,11 @@ body {
         let ratingItems = "";
         for (let i = 0; i < 5; i++) {
             const filled = Math.ceil(rating ?? 0) >= i + 1;
-            ratingItems += `<li><i class='bx bxs-star${filled ? " filled" : ""}'></i></li>`;
+            ratingItems += `<li><i class='star cx-icon fas fa-star ng-star-inserted${filled ? " filled" : ""}'></i></li>`;
         }
 
         const buildFavoriteButton = (id) => {
-            const isFavorite = isFavoriteProduct(id);
+            const isFavorite = this.isFavoriteProduct(id);
 
             return `
                 <button class="btn-favorite"
@@ -694,12 +724,83 @@ body {
         const newFavoriteProductIds = favoriteProductIds.filter((fpi) => fpi !== productId);
 
         this.storage.saveData("favoriteProductIds", newFavoriteProductIds)
-    };
+    }
+
+    initializeEventListeners() {
+        const $slider = $('.product-list');
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+
+        $slider.on('mousedown', function (e) {
+            isDown = true;
+            $slider.addClass('dragging');
+            startX = e.pageX - $slider.offset().left;
+            scrollLeft = $slider.scrollLeft();
+            e.preventDefault();
+        });
+
+        $(document).on('mouseup', function () {
+            isDown = false;
+            $slider.removeClass('dragging');
+        });
+
+        $(document).on('mousemove', function (e) {
+            if (!isDown) return;
+            const x = e.pageX - $slider.offset().left;
+            const walk = (x - startX) * 1.5;
+            $slider.scrollLeft(scrollLeft - walk);
+        });
+
+        $('.product-group__content').on('click', function (e) {
+            const productListItemWidth = $(this).find(".product-list").children(":first").width();
+            if ($(e.target).hasClass("swiper-prev")) {
+                $slider.animate({
+                    scrollLeft: $slider.scrollLeft() - productListItemWidth,
+                }, 100);
+            }
+
+            if ($(e.target).hasClass("swiper-next")) {
+                $slider.animate({
+                    scrollLeft: $slider.scrollLeft() + productListItemWidth
+                }, 100);
+            }
+        });
+
+        $(".product-list").on("click", (e) => {
+            if ($(e.target).hasClass("btn-cart")) {
+                e.preventDefault();
+            }
+
+            if ($(e.target).closest("button").hasClass("btn-favorite")) {
+                e.preventDefault();
+
+                if (+$(e.target).closest("button").data("favorite")) {
+                    this.removeFavoriteProduct($(e.target).closest(".product-list__item").data("id"));
+
+                    $(e.target).closest("button").data("favorite", "0");
+
+                    $(e.target).closest("button").find(".heart-icon").attr("src", "assets/svg/default-favorite.svg");
+                    $(e.target).closest("button").find(".heart-icon.hovered").attr("src", "assets/svg/default-hover-favorite.svg");
+                } else {
+                    this.saveFavoriteProduct($(e.target).closest(".product-list__item").data("id"));
+
+                    $(e.target).closest("button").data("favorite", "1");
+
+                    $(e.target).closest("button").find(".heart-icon").attr("src", "assets/svg/added-favorite.svg");
+                    $(e.target).closest("button").find(".heart-icon.hovered").attr("src", "assets/svg/added-favorite-hover.svg");
+                }
+            }
+        });
+    }
 }
 
 class App {
     constructor() {
         this.productCarousel = new ProductCarousel(".Section1");
+    }
+
+    initializeEventListeners() {
     }
 }
 
