@@ -1,8 +1,8 @@
 class StorageManager {
-    constructor({defaultCachingDuration = 0}) {
+    constructor(config = {defaultCachingDuration: 0}) {
         this._storageKeyPrefix = location.hostname;
 
-        this._expiryInMillis = defaultCachingDuration;
+        this._expiryInMillis = config.defaultCachingDuration;
     }
 
     _getStorageKey(key) {
@@ -99,6 +99,12 @@ class UIUtils {
 class ProductCarousel {
     constructor(prevBlockSelector) {
         this.buildDependencies(() => {
+            this.storage = new StorageManager({
+                defaultCachingDuration: 10_000,
+            });
+
+            this.request = new RequestManager();
+
             this.buildCss();
 
             this.productCarouselContainer = this.buildProductCarouselContainer(prevBlockSelector, "Beğenebileceğinizi düşündüklerimiz");
@@ -569,6 +575,32 @@ body {
         </div> 
         `);
     }
+
+    saveFavoriteProduct(productId) {
+        const favoriteProductIds = this.storage.getSavedData("favoriteProductIds") ?? [];
+
+        if (favoriteProductIds.includes(productId)) return;
+
+        favoriteProductIds.push(productId);
+
+        this.storage.saveData("favoriteProductIds", favoriteProductIds)
+    }
+
+    isFavoriteProduct(productId) {
+        const favoriteProductIds = this.storage.getSavedData("favoriteProductIds") ?? [];
+
+        return favoriteProductIds.includes(productId);
+    }
+
+    removeFavoriteProduct(productId) {
+        const favoriteProductIds = this.storage.getSavedData("favoriteProductIds");
+
+        if (!favoriteProductIds) return;
+
+        const newFavoriteProductIds = favoriteProductIds.filter((fpi) => fpi !== productId);
+
+        this.storage.saveData("favoriteProductIds", newFavoriteProductIds)
+    };
 }
 
 class App {
