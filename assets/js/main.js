@@ -1,3 +1,51 @@
+class StorageManager {
+    constructor(defaultCachingDuration = 0) {
+        this.storageKeyPrefix = location.hostname;
+
+        this.expiryInMillis = defaultCachingDuration;
+    }
+
+    _getStorageKey(key) {
+        return this.storageKeyPrefix + "|" + key;
+    }
+
+    saveData(key, data, expiryInMillis = this.expiryInMillis) {
+        try {
+            const expiryTimestamp = Date.now() + expiryInMillis;
+
+            const cacheObject = {
+                data,
+                expiry: expiryTimestamp
+            };
+
+            localStorage.setItem(this._getStorageKey(key), JSON.stringify(cacheObject));
+
+            return data;
+        } catch (e) {
+            return data;
+        }
+    }
+
+    getSavedData(key) {
+        try {
+            const cacheString = localStorage.getItem(this._getStorageKey(key));
+
+            if (!cacheString) return null;
+
+            const {data, expiry} = JSON.parse(cacheString);
+
+            if (Date.now() > expiry) {
+                localStorage.removeItem(this._getStorageKey(key));
+                return null;
+            }
+
+            return data;
+        } catch (e) {
+            return null;
+        }
+    }
+}
+
 class RequestManager {
     constructor(cachingDuration = 1000) {
         this.storageKeyPrefix = location.hostname;
