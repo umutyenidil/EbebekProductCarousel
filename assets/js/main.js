@@ -1,17 +1,17 @@
 class StorageManager {
     constructor(defaultCachingDuration = 0) {
-        this.storageKeyPrefix = location.hostname;
+        this._storageKeyPrefix = location.hostname;
 
-        this.expiryInMillis = defaultCachingDuration;
+        this._expiryInMillis = defaultCachingDuration;
     }
 
     _getStorageKey(key) {
-        return this.storageKeyPrefix + "|" + key;
+        return this._storageKeyPrefix + "|" + key;
     }
 
-    saveData(key, data, expiryInMillis = this.expiryInMillis) {
+    saveData(key, data, expiryInMillis = this._expiryInMillis) {
         try {
-            const expiryTimestamp = Date.now() + expiryInMillis;
+            const expiryTimestamp = expiryInMillis > 0 ? Date.now() + expiryInMillis : undefined;
 
             const cacheObject = {
                 data,
@@ -33,6 +33,8 @@ class StorageManager {
             if (!cacheString) return null;
 
             const {data, expiry} = JSON.parse(cacheString);
+
+            if (!expiry) return data;
 
             if (Date.now() > expiry) {
                 localStorage.removeItem(this._getStorageKey(key));
