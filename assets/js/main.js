@@ -85,11 +85,11 @@ class RequestManager {
 
 class UIUtils {
     constructor() {
-        this.locale = navigator.language;
+        this._locale = navigator.language;
     }
 
     formatPrice(price) {
-        return new Intl.NumberFormat(this.locale, {
+        return new Intl.NumberFormat(this._locale, {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2
         }).format(price);
@@ -106,6 +106,8 @@ class ProductCarousel {
             this.request = new RequestManager();
 
             this.buildCss();
+
+            this.uiUtils = new UIUtils();
 
             this.productCarouselContainer = this.buildProductCarouselContainer(prevBlockSelector, "Beğenebileceğinizi düşündüklerimiz");
         });
@@ -574,6 +576,98 @@ body {
             </div>
         </div> 
         `);
+    }
+
+    buildProductListItem({id, brand, name, url, img, price, original_price, rating, rating_count}) {
+        const priceNow = `
+            <span class="price-now${original_price > price ? " discounted" : ""}">${this.uiUtils.formatPrice(price)} TL</span>
+        `;
+
+        const discountPercentage = Math.floor(((original_price - price) / original_price) * 100);
+        const discount = original_price > price ? `
+            <div class="discount">
+                <span class="price-old discounted">${this.uiUtils.formatPrice(original_price)} TL</span>
+                <span class="percentage discounted">%${discountPercentage}<i class="icon icon-decrease"></i></span>
+            </div>
+        ` : '';
+
+        let ratingItems = "";
+        for (let i = 0; i < 5; i++) {
+            const filled = Math.ceil(rating ?? 0) >= i + 1;
+            ratingItems += `<li><i class='bx bxs-star${filled ? " filled" : ""}'></i></li>`;
+        }
+
+        const buildFavoriteButton = (id) => {
+            const isFavorite = isFavoriteProduct(id);
+
+            return `
+                <button class="btn-favorite"
+                        data-favorite="${isFavorite ? "1" : "0"}">
+                    <img src="${isFavorite ? "assets/svg/added-favorite.svg" : "assets/svg/default-favorite.svg"}" alt="heart" class="heart-icon">
+                    <img src="${isFavorite ? "assets/svg/added-favorite-hover.svg" : "assets/svg/default-hover-favorite.svg"}" alt="heart" class="heart-icon hovered">
+                </button>
+            `;
+        };
+
+        return `
+            <li class="product-list__item"
+                data-id="${id}">
+                <a href="${url}" target="_blank">
+                    <div class="product-card">
+                        <div class="product-card__header">
+                            <img src="${img}" alt="product-image">
+                        </div>
+                        <div class="product-card__title">
+                            <h2 class="title"><b>${brand} -</b> ${name}</h2>
+                        </div>
+                        <div class="product-card__rating">
+                            <ul class="rating-bar">
+                                ${ratingItems}
+                            </ul>
+                            <span class="rating-count">(${rating_count ?? 0})</span>
+                        </div>
+                        <div class="product-card__pricing">
+                            ${discount}
+                            ${priceNow}
+                        </div>
+                        <div class="product-card__promotion">
+                        </div>
+                        <div class="product-card__footer">
+                            <button class="btn-cart">Sepete Ekle</button>
+                        </div>
+                        
+                        <div class="product-card__overlay">
+                            ${buildFavoriteButton(id)}
+                        </div>
+                    </div>
+                </a>
+            </li>
+        `
+    }
+
+    buildProductListItemPlaceholder() {
+        return `
+            <li class="product-list__item placeholder">
+                <div class="product-card placeholder">
+                        <div class="product-card__header placeholder">
+                        </div>
+                        <div class="product-card__title">
+                            <div class="title placeholder"></div>
+                        </div>
+                        <div class="product-card__rating">
+                            <div class="rating-bar placeholder""></div>
+                        </div>
+                        <div class="product-card__pricing">
+                            <div class="price-now placeholder"></div>
+                        </div>
+                        <div class="product-card__promotion">
+                        </div>
+                        <div class="product-card__footer">
+                            <div class="btn-cart placeholder"></div>
+                        </div>
+                    </div>
+            </li>
+        `;
     }
 
     saveFavoriteProduct(productId) {
