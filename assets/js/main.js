@@ -295,7 +295,7 @@ body {
 }
 
 .uYproduct-card .uYproduct-card__header.uYplaceholder {
-    background-color: #ededed;
+    background-color: #f2fafe;
 }
 
 .uYproduct-card .uYproduct-card__header img {
@@ -329,7 +329,7 @@ body {
     height: 15px;
     width: 75%;
     border-radius: 8px;
-    background-color: #ededed;
+    background-color: #f2fafe;
 }
 
 .uYproduct-card .uYproduct-card__rating {
@@ -351,7 +351,7 @@ body {
     width: 112px;
     height: 27px;
     border-radius: 14px;
-    background-color: #ededed;
+    background-color: #f2fafe;
 }
 
 .uYproduct-card .uYproduct-card__rating .uYrating-bar li i{
@@ -427,7 +427,7 @@ body {
 .uYproduct-card .uYproduct-card__pricing .uYprice-now.uYplaceholder {
     height: 37px;
     border-radius: 19px;
-    background-color: #ededed;
+    background-color: #f2fafe;
     width: 128px;
 }
 
@@ -462,7 +462,7 @@ body {
 
 .uYproduct-card .uYproduct-card__footer .uYbtn-cart.uYplaceholder {
     height: 53px;
-    background-color: #ededed;
+    background-color: #f2fafe;
 }
 
 .uYproduct-card .uYproduct-card__footer .uYbtn-cart:hover {
